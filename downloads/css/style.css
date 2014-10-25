@@ -1,0 +1,131 @@
+* {
+  margin:             0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing:    border-box;
+  box-sizing:         border-box;
+}
+
+body {
+  font-size: 16px;
+  font-family: "Microsoft Yahei", sans-serif;
+}
+
+span {
+  display: block;
+  float: left;
+  
+  padding: 2px 5px;
+  background-color: lightgrey;
+  margin: 5px;
+  
+  /* font-weight: bold; */
+  background-color: #e0eaf1;
+  border-bottom: 1px solid #b3cee1;
+  border-right: 1px solid #b3cee1;
+  
+  cursor: pointer;
+}
+
+textarea, .context_display {
+  display: block;
+
+  outline:       none;
+  border:        1px solid #ccc;
+  border-radius: 3px;
+  box-shadow:    inset 0 1px 2px rgba(0,0,0,0.075);
+  
+  font-size:     16px;
+  font-family:   Helvetica, arial, sans-serif;
+  line-height:   1.5;
+  color:         #333;
+}
+
+/* clear fix */
+.cf:before,
+.cf:after {
+  content: " ";
+  display: table;
+}
+.cf:after {
+  clear: both;
+}
+.cf {
+  *zoom: 1;
+}
+
+.center {
+  width: 600px;
+  margin: 120px auto 0;
+}
+
+#context_field, .context_display {
+  width:         100%;
+  padding:       10px;
+  min-height:    200px;
+  
+  border-bottom: 1px dashed #ddd; 
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+#context_field {
+  max-height:    500px;
+  resize:        vertical;
+}
+
+.context_display {
+  display: none;
+  word-break: break-all;
+}
+
+.hint {
+  display: block;
+  padding: 7px 10px;
+  
+  border: 1px solid #ccc;
+  border-top: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  
+  color: #aaa;
+}
+
+.focused .hint, textarea:focus {
+  border-color:  #51a7e8;
+  box-shadow:    inset 0 1px 2px rgba(0,0,0,0.075), 0 0 5px rgba(81,167,232,0.5);
+}
+
+button.cancel, button.confirm {
+  width: 80px;
+  
+  margin: 50px auto;
+  padding: 7px 10px;
+  
+  font-size: 16px;
+  font-weight: bold;
+  
+  cursor: pointer;
+  border: 1px solid #5ca941;
+  border-radius: 3px;
+  
+  color:            #fff; 
+  text-shadow:      0 -1px 0 rgba(0,0,0,0.25);
+}
+
+button.confirm {
+  display: block;
+  border: 1px solid #5ca941;
+  background-color: #60b044;
+}
+
+button.cancel {
+  display: none;
+  border: 1px solid lightblue;
+  background-color: lightblue;
+}
+
+button.disabled {
+  cursor: default;
+  border: 1px solid #888;
+  background-color: #888;
+}
