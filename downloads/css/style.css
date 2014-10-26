@@ -10,16 +10,15 @@ body {
   font-family: "Microsoft Yahei", sans-serif;
 }
 
-span {
+span.clickable-word {
   display: block;
   float: left;
   
   padding: 2px 5px;
-  background-color: lightgrey;
   margin: 5px;
   
   /* font-weight: bold; */
-  background-color: #e0eaf1;
+  background-color: #60b044;
   border-bottom: 1px solid #b3cee1;
   border-right: 1px solid #b3cee1;
   
@@ -54,11 +53,18 @@ textarea, .context_display {
 }
 
 .center {
-  width: 400px;
-  margin: 120px auto 0;
+  position: relative;
+  width: 900px;
+  margin: 100px auto 0;
+}
+
+.context {
+  width:         360px;
+  margin:        0 auto;
 }
 
 #context_field, .context_display {
+  display:       block;
   width:         100%;
   padding:       10px;
   min-height:    350px;
@@ -105,27 +111,73 @@ button.cancel, button.confirm {
   font-weight: bold;
   
   cursor: pointer;
-  border: 1px solid #5ca941;
+  border: 1px solid #236FD4;
   border-radius: 3px;
   
   color:            #fff; 
   text-shadow:      0 -1px 0 rgba(0,0,0,0.25);
+  
+  background-color: #236FD4;
 }
 
 button.confirm {
   display: block;
-  border: 1px solid #5ca941;
-  background-color: #60b044;
 }
 
 button.cancel {
   display: none;
-  border: 1px solid lightblue;
-  background-color: lightblue;
 }
 
 button.disabled {
   cursor: default;
   border: 1px solid #888;
   background-color: #888;
+}
+
+.collins {
+  display: none;
+  min-height: 470px;
+  max-height: 800px;
+  
+  overflow: auto;
+}
+
+.collins-cat {
+  color: #236FD4;
+  font-weight: bold;
+  padding-bottom: 8px;
+}
+
+.collins, .collins h3 {
+  font-family: 'Microsoft Yahei', sans-serif;
+  font-size:    14px;
+  font-weight:  normal;
+}
+
+.collins h3 {
+  background-color: #f7f7f6;
+  padding: 9px 9px 9px 23px;
+  margin-bottom: 8px;
+}
+
+.def-id {
+  font-weight: bold;
+  margin-left: -17px;
+}
+
+.def-cn {
+  font-weight: bold;
+  color: #236FD4;
+}
+
+ul.collins-items, ul.collins-examples{
+  list-style-type: none;
+  padding: 0;
+}
+
+ul.collins-examples li {
+  background: url(../images/list.png) no-repeat 6px -6px;
+  padding-left: 30px;
+  padding-bottom: 8px;
+  color: #666;
 }

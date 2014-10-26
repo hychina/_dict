@@ -1,5 +1,9 @@
 var http = require('http'),
-    cheerio = require('cheerio');
+    cheerio = require('cheerio'),
+    logger = require('./logger.js'),
+    db = require('./db.js');
+
+var spider = exports = module.exports;
 
 parsehtml = function (str) {
   /*
@@ -13,33 +17,30 @@ parsehtml = function (str) {
    *           <p> // english
    *           <p> // chinese
   */
-  
-  var word = [];
-  
+
   $ = cheerio.load(str);
   collins = $('#en-collins');
   
+  // 所查单词不存在
+  if (str.indexOf('词典中没有与您搜索的关键词匹配的内容') > -1 ||
+      collins.length == 0) {
+    return null;
+  }
+  
+  var word = {};
+  word.categories = [];
   collins.find('.collins-item').each(function(i, elem) {
     var category = $(this).text();
-    word.push({'category': category});
+    word.categories.push({'category': category});
   });
-  if (word.length == 0) {
-    word.push({'category': 'default'});
+  if (word.categories.length == 0) {
+    word.categories.push({'category': false});
   }
   
   collins.find('ul:not(ul ul)').each(function (i, elem) {
-    word[i].items = [];
+    word.categories[i].items = [];
     // each item
     $(this).children('li:not(.collins-note)').each(function () {
-      var examples = [];
-      
-      // examples
-      $(this).find('ul li').each(function () {
-        examples.push({
-          'cn_definiton': $(this).children().eq(0).text(),
-          'en_definiton': $(this).children().eq(1).text()
-        });
-      });
       
       // definition
       var def = $(this).find('h3').children();
@@ -50,24 +51,34 @@ parsehtml = function (str) {
         definition.def_cn = def.eq(2).text();
         definition.def_en = def.eq(3).text();
         
-        word[i].items.push({
-          'definiton': definition,
+        // examples
+        var examples = [];
+        $(this).find('ul li').each(function () {
+          examples.push({
+            'example_en': $(this).children().eq(0).text(),
+            'example_cn': $(this).children().eq(1).text()
+          });
+        });
+
+        word.categories[i].items.push({
+          'definition': definition,
           'examples': examples
         });
       }
 
     });
   });
-  console.log(JSON.stringify(word, null, " "));
+  
+  return word;
 }
 
 var options = {
   host: 'dict.baidu.com',
-  path: '/s?wd=bank',
+  path: '',
   headers: {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'}
 }
 
-callback = function (res) {
+responseHandler = function (res, callback) {
   var str = '';
   
   res.setEncoding('utf8');
@@ -77,13 +88,25 @@ callback = function (res) {
   });
   
   res.on('end', function() {
-    parsehtml(str);
+    var wordJson = parsehtml(str);
+    if (!wordJson) 
+      callback(null);
+    else
+      callback(wordJson);
+    // db.saveWord(wordStr, JSON.stringify());
   });
 }
 
-var req = http.request(options, callback);
-req.on('error', function (e) {
-  console.log('error: ' + e.message);
-});
+spider.fetchWord = function (wordStr, callback) {
+  options.path = '/s?wd=' + wordStr;
+  
+  var req = http.request(options, function (res) {
+    responseHandler(res, callback);
+  });
+  
+  req.on('error', function (e) {
+    logger.error('spider error: ' + e.message);
+  });
+  req.end();
+}
 
-req.end();
