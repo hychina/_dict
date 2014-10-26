@@ -1,21 +1,46 @@
-function Context(contextWords) {
-  this.contextWords = contextWords.trim().split(/\s+/);
+function queryWord(word) {
+  $.ajax({
+    url: "/demo/dict/q",
+    data: {
+      "wd": word
+    },
+    type: "GET",
+    dataType: "html",
+    success: function (json) {
+      alert(json);
+    },
+    error: function( xhr, status, errorThrown ) {
+      alert( "Sorry, there was a problem!" );
+      console.log( "Error: " + errorThrown );
+      console.log( "Status: " + status );
+      console.dir( xhr );
+    }
+  });
+}
+
+function Context() {
 }
 
 Context.prototype = {
-  transformDisplay: function () {
+  transformDisplay: function (contextWords) {
+    contextWords = contextWords.trim().split(/\s+/);
     var dispayDiv = $("div.context_display");
-    for (var i = 0, len = this.contextWords.length; i < len; i++) {
-      dispayDiv.append("<span>" + this.contextWords[i] + "</span>");
+    for (var i = 0, len = contextWords.length; i < len; i++) {
+      dispayDiv.append("<span>" + contextWords[i] + "</span>");
     }
     $("span").mouseover(function () {
       $(this).css("background-color", "#60b044");
-    });
-    $("span").mouseout(function () {
+    })
+    .mouseout(function () {
       $(this).css("background-color", "#e0eaf1");
+    })
+    .click(function () { 
+      queryWord($(this).text());
     });
   }
 }
+
+var context = new Context();
 
 /* envent handlers */
 
@@ -50,8 +75,7 @@ $("button.confirm").click(function () {
   $("div.context_display").show();
   $("#context_field").hide();
   $("p.hint").text("请选择要查询的单词");
-  var context = new Context($("#context_field").val());
-  context.transformDisplay();
+  context.transformDisplay($("#context_field").val());
 });
 
 $("button.cancel").click(function () {
@@ -59,7 +83,7 @@ $("button.cancel").click(function () {
   $(this).hide();
   $("#context_field").show();
   $("div.context_display").hide();
-  $("div.context_display").empty();
+  $("div.context_display").empty(); // 清空动态添加的span
   $("p.hint").text("请输入单词所在的上下文");
 });
 

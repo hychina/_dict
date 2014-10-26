@@ -54,14 +54,14 @@ textarea, .context_display {
 }
 
 .center {
-  width: 600px;
+  width: 400px;
   margin: 120px auto 0;
 }
 
 #context_field, .context_display {
   width:         100%;
   padding:       10px;
-  min-height:    200px;
+  min-height:    350px;
   
   border-bottom: 1px dashed #ddd; 
   border-bottom-right-radius: 0px;
