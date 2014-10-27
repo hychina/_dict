@@ -1,7 +1,8 @@
 var http = require('http'),
     url = require('url'),
     spider = require('./spider.js'),
-    logger = require('./logger.js');
+    logger = require('./logger.js'),
+    db = require('./db.js');
 
 requestHandler = function (req, res) {
   var query = url.parse(req.url, true).query;
@@ -9,10 +10,10 @@ requestHandler = function (req, res) {
   
   /* TODO: 如果wd为空，跳转到/demo/dict */
   
-  spider.fetchWord(wordStr, function(wordJson) {
+  db.getWord(wordStr, function(wordJsonStr) {
     res.setHeader('Content-Type', 'application/json');
-    if (wordJson)
-      res.end(JSON.stringify(wordJson));
+    if (wordJsonStr)
+      res.end(wordJsonStr);
     else
       res.end(null);
   });

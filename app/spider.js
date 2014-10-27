@@ -93,7 +93,6 @@ responseHandler = function (res, callback) {
       callback(null);
     else
       callback(wordJson);
-    // db.saveWord(wordStr, JSON.stringify());
   });
 }
 
