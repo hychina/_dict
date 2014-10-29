@@ -16,16 +16,17 @@ MongoClient.connect(url, function(err, db) {
 var insertDocuments = function (db, callback) {
   var collection = db.collection('sentences');
   
+  var n = 0;
   lineReader.eachLine('../data/sentences.dmp', function(line, last) {
-    var splits = line.split('|');
-    
     if (n++ == 10) return false;
+    var splits = line.split('|');
+    console.log(splits[1] + '\n' + splits[2]);
   });
   
-  collection.insert({a:1}, function (err, result) {
-    assert.equal(err, null);
-    console.log('inserted into collection');
-    callback(result);
-  });
+  // collection.insert({a:1}, function (err, result) {
+  //   assert.equal(err, null);
+  //   console.log('inserted into collection');
+  //   callback(result);
+  // });
 }
 
