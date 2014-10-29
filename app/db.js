@@ -28,6 +28,6 @@ db.getWord = function (word, callback) {
   });
 }
 
-db.saveWord = function (wordStr, wordJson) {
-  client.set(wordStr, wordJson);
+db.saveWord = function (wordStr, wordJsonStr) {
+  client.set(wordStr, wordJsonStr);
 }
