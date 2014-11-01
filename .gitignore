@@ -3,3 +3,4 @@ app.log
 
 data/*
 !data/word_list
+!data/inflections
