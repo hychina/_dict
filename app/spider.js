@@ -24,6 +24,7 @@ parsehtml = function (str) {
   // 所查单词不存在
   if (str.indexOf('词典中没有与您搜索的关键词匹配的内容') > -1 ||
       collins.length == 0) {
+    logger.info(str);
     return null;
   }
   
@@ -78,7 +79,7 @@ var options = {
   headers: {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'}
 }
 
-responseHandler = function (res, callback) {
+responseHandler = function (res, wordStr, callback) {
   var str = '';
   
   res.setEncoding('utf8');
@@ -89,6 +90,7 @@ responseHandler = function (res, callback) {
   
   res.on('end', function() {
     var wordJson = parsehtml(str);
+    console.log('parsed html for ' + wordStr);
     if (!wordJson) 
       callback(null);
     else
@@ -100,12 +102,25 @@ spider.fetchWord = function (wordStr, callback) {
   options.path = '/s?wd=' + wordStr;
   
   var req = http.request(options, function (res) {
-    responseHandler(res, callback);
+    console.log('response got for: ' + wordStr);
+    responseHandler(res, wordStr, callback);
+  });
+  
+  req.on('socket', function (socket) {
+    socket.setTimeout(20 * 1000);  
+    socket.on('timeout', function() {
+      req.abort();
+      logger.error('timeout error: ' + wordStr);
+      console.log('timeout error: ' + wordStr);
+      callback(null);
+    });
   });
   
   req.on('error', function (e) {
     logger.error('spider error: ' + e.message);
   });
+  
   req.end();
+  console.log('request sent for: ' + wordStr);
 }
 

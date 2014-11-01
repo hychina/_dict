@@ -10,12 +10,21 @@ requestHandler = function (req, res) {
   
   /* TODO: 如果wd为空，跳转到/demo/dict */
   
+  res.setHeader('Content-Type', 'application/json');
+  
   db.getWord(wordStr, function(wordJsonStr) {
-    res.setHeader('Content-Type', 'application/json');
     if (wordJsonStr)
       res.end(wordJsonStr);
     else
-      res.end(null);
+      spider.fetchWord(word, function (wordJson) {
+        if (!wordJson)
+          res.end(null);
+        else {
+          var wordJsonStr = JSON.stringify(wordJson);
+          db.saveWord(word, wordJsonStr);
+          res.end(wordJsonStr);
+        }
+      });
   });
 }
 

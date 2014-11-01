@@ -1,6 +1,5 @@
-var redis = require('redis'),
-    logger = require('./logger.js'),
-    spider = require('./spider.js');
+var redis = require('redis')
+  , logger = require('./logger.js');
 
 var client = redis.createClient(6379, '127.0.0.1');
 
@@ -13,21 +12,17 @@ var db = exports = module.exports;
 db.getWord = function (word, callback) {
   client.get(word, function (err, value) {
     if (err) throw err;
-    if (!value) //spider
-      spider.fetchWord(word, function (wordJson) {
-        if (!wordJson)
-          callback(null);
-        else {
-          var wordJsonStr = JSON.stringify(wordJson);
-          callback(wordJsonStr);
-          db.saveWord(word, wordJsonStr);
-        }
-      });
-    else 
-      callback(value);
+    callback(value);
   });
 }
 
 db.saveWord = function (wordStr, wordJsonStr) {
   client.set(wordStr, wordJsonStr);
+}
+
+db.getAllKeys = function () {
+  client.keys('*', function (err, keys, callback) { 
+    if (err) throw err; 
+    callback(keys);
+  });
 }
