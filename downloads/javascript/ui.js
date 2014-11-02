@@ -7,9 +7,16 @@ function queryWord(word) {
     type: 'GET',
     dataType: 'json',
     success: function (json) {
+      if (json.empty) {
+        alert('null');
+        return;
+      }
       var template = $('#collinsTp').html();
       var html = Mustache.to_html(template, json);
       $('.collins').html(html);
+      
+      $('.context').css('float', 'left');
+      $('.collins').css({'margin-left': '420px', 'display': 'block'});
     },
     error: function( xhr, status, errorThrown ) {
       alert( 'Sorry, there was a problem!' );
@@ -25,7 +32,7 @@ function Context() {
 
 Context.prototype = {
   transformDisplay: function (contextWords) {
-    contextWords = contextWords.trim().split(/\s+/);
+    contextWords = contextWords.match(/\w+/g);
     var dispayDiv = $('div.context_display');
     for (var i = 0, len = contextWords.length; i < len; i++) {
       dispayDiv.append('<span class="clickable-word">' + contextWords[i] + '</span>');
@@ -53,10 +60,6 @@ Context.prototype = {
       }
       lastClickedSpan = this;
       $(this).off('mouseout');
-      
-      // $('.context').css('float', 'left');
-      $('.context').css('float', 'left');
-      $('.collins').css({'margin-left': '420px', 'display': 'block'});
     });
   }
 }

@@ -18,6 +18,7 @@ db.getWord = function (word, callback) {
 
 db.saveWord = function (wordStr, wordJsonStr) {
   client.set(wordStr, wordJsonStr);
+  console.log('saved in databse: ' + wordStr);
 }
 
 db.getAllKeys = function () {
