@@ -1,6 +1,8 @@
 .DS_Store
 app.log
 
+lib/
+
 data/*
 !data/word_list
 !data/inflections
