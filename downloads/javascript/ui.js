@@ -1,10 +1,9 @@
-function queryWord(word) {
+function queryWord(data) {
   $.ajax({
     url: '/demo/dict/q',
-    data: {
-      'wd': word
-    },
-    type: 'GET',
+    type: 'POST',
+    data: JSON.stringify(data),
+    contentType: 'application/json',
     dataType: 'json',
     success: function (json) {
       if (json.empty) {
@@ -40,7 +39,8 @@ Context.prototype = {
     
     var lastClickedSpan = null;
     
-    $('span.clickable-word').mouseover(function () {
+    $('span.clickable-word')
+    .mouseover(function () {
       $(this).css('background-color', '#888');
     })
     .mouseout(function () {
@@ -50,7 +50,11 @@ Context.prototype = {
       if (lastClickedSpan === this) 
         return false;
         
-      queryWord($(this).text());
+      var offset = contextWords.indexOf($(this).text());
+      queryWord({
+        'contextWords': contextWords,
+        'offset': offset 
+      });
       
       if (lastClickedSpan) {
         $(lastClickedSpan).css('background-color', '#60b044');
@@ -81,16 +85,16 @@ $('p.hint').click(function () {
 });
 
 function toggleConfirmButton() {
-  if ($(this).val() != '') {
+  if ($(this).val().length) {
     $('button.confirm').prop('disabled', false).removeClass('disabled');
   } else {
     $('button.confirm').prop('disabled', true).addClass('disabled');
   }
 }
 
-$('#context_field').keyup(toggleConfirmButton);
+$('#context_field').bind('input propertychange', toggleConfirmButton);
 
-$('button.confirm').prop('disabled', true);
+$('button.confirm').prop('disabled', false);
 
 // transform context string into clickable objects
 $('button.confirm').click(function () {
